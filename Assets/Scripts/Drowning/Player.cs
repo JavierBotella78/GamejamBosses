@@ -38,16 +38,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        checkForCollision(collision);
-    }     
-    
-    private void checkForCollision(Collider2D collision)
-    {
-
-    }
-
     private void Update()
     {
         inputPlayer();

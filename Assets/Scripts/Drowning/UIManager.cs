@@ -40,9 +40,8 @@ public class UIManager : MonoBehaviour
     public void addLife(float amount)
     {
         _currentLife += amount;
-        Debug.Log(_currentLife);
-        if(_currentLife >= _maxLife) { _currentLife = _maxLife; return; }
-        if (_currentLife <= _maxLife) { _currentLife = 0; return; }
-
+        if(_currentLife >= _maxLife) { _currentLife = _maxLife;}
+        if (_currentLife <= 0) { _currentLife = 0;}
+        _healthImage.fillAmount = _currentLife / _maxLife;
     }
 }

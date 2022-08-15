@@ -11,16 +11,16 @@ GameObject:
   - component: {fileID: 1916252531283965021}
   - component: {fileID: 1916252531283965010}
   - component: {fileID: 1916252531283965011}
-  - component: {fileID: 1916252531283965009}
   - component: {fileID: 1502132108}
   - component: {fileID: 1502132107}
-  m_Layer: 13
-  m_Name: P_Enemy
+  - component: {fileID: -7337835720679252627}
+  m_Layer: 11
+  m_Name: P_PowerUp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1916252531283965021
 Transform:
   m_ObjectHideFlags: 0
@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8c6696136fd4147469cc9e74d9f135ab, type: 2}
+  - {fileID: 2100000, guid: 351b9f9220b29c84fb1cecd7d0be6afc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -86,21 +86,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &1916252531283965009
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1916252531283965022}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 921fee86995cd0b4e97077fa006b7f90, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _bullet: {fileID: 11400000, guid: 0291c979e76fa3e4e9f4abb5d3853f6a, type: 2}
-  maxhp: 50
-  currenthp: 0
 --- !u!50 &1502132108
 Rigidbody2D:
   serializedVersion: 4
@@ -148,3 +133,16 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &-7337835720679252627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1916252531283965022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdb9c8aa8a6ad614180513ae760e3f00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healAmount: 50
