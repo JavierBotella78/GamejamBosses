@@ -19,7 +19,7 @@ public class Enemy : MonoBehaviour
     }
     private void Start()
     {
-        //InvokeRepeating(nameof(Disparar), 1f, 1f);
+        InvokeRepeating(nameof(Disparar), 1f, 1f);
     }
 
     private void Disparar()
@@ -52,6 +52,7 @@ public class Enemy : MonoBehaviour
     }
     protected void disableEnemy()
     {
+        CancelInvoke(nameof(Disparar));
         gameObject.SetActive(false);
     }
 }
