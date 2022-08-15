@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject _bullets; //
     [SerializeField] private GameObject _enemyBullets; //
     [SerializeField] private GameObject _enemies; //
+    [SerializeField] private GameObject _pickUps; //
 
     [SerializeField] private UIManager uimanager; //
 
@@ -34,6 +35,7 @@ public class GameManager : MonoBehaviour
             suscribeBulletsEvents();
             suscribeEnemyBulletsEvents();
             suscribeEnemyEvents();
+            suscribePowerUpEvents();
         }
         else
         {
@@ -41,6 +43,7 @@ public class GameManager : MonoBehaviour
             unsuscribeBulletsEvents();
             unsuscribeEnemyBulletsEvents();
             unsuscribeEnemyEvents();
+            unsuscribePowerUpEvents();
         }
     }
 
@@ -103,8 +106,10 @@ public class GameManager : MonoBehaviour
         if (_enemies == null) { return; }
         for (int i = 0; i < _enemies.transform.childCount; i++)
         {
-            Enemy bullet = _enemies.transform.GetChild(i).GetComponent<Enemy>();
-            bullet.OnAttack += generateEnemyBullet;
+            Enemy enemy = _enemies.transform.GetChild(i).GetComponent<Enemy>();
+            enemy.OnAttack += generateEnemyBullet;
+            enemy.DamagePlayer += changeLifeOfEntity;
+            enemy.onPickupGenerate += generatePickup;
         }
     }
 
@@ -113,8 +118,30 @@ public class GameManager : MonoBehaviour
         if (_enemies == null) { return; }
         for (int i = 0; i < _enemies.transform.childCount; i++)
         {
-            Enemy bullet = _enemies.transform.GetChild(i).GetComponent<Enemy>();
-            bullet.OnAttack -= generateEnemyBullet;
+            Enemy enemy = _enemies.transform.GetChild(i).GetComponent<Enemy>();
+            enemy.OnAttack -= generateEnemyBullet;
+            enemy.DamagePlayer -= changeLifeOfEntity;
+            enemy.onPickupGenerate -= generatePickup;
+        }
+    }
+
+    private void suscribePowerUpEvents()
+    {
+        if (_pickUps == null) { return; }
+        for (int i = 0; i < _pickUps.transform.childCount; i++)
+        {
+            PowerUp powerUp = _pickUps.transform.GetChild(i).GetComponent<PowerUp>();
+            powerUp.onPickupsGot += changeHealthOfPlayer;
+        }
+    }
+
+    private void unsuscribePowerUpEvents()
+    {
+        if (_pickUps == null) { return; }
+        for (int i = 0; i < _pickUps.transform.childCount; i++)
+        {
+            PowerUp powerUp = _pickUps.transform.GetChild(i).GetComponent<PowerUp>();
+            powerUp.onPickupsGot -= changeHealthOfPlayer;
         }
     }
 
@@ -127,18 +154,18 @@ public class GameManager : MonoBehaviour
     {
         Player playr;
         entity.TryGetComponent(out playr);
-        if(playr == null  /*&& enemy == null*/) { return; }
+
+        Enemy enemy;
+        entity.TryGetComponent(out enemy);
+        if (playr == null  && enemy == null) { return; }
 
         if(playr != null)
         {
-            Debug.Log("asdasdasdasdasdas");
-
             uimanager.addLife(amount); return;
         }
              
-        //Enemy enemy;
-        //entity.TryGetComponent(out enemy);
-        //enemy.addLife(amount);
+        
+        enemy.changeLife(amount);
     }
 
     private void generateBullet(Vector2 position, float speed, float damage)
@@ -173,6 +200,33 @@ public class GameManager : MonoBehaviour
             }
         }
         //GameObject bullet = Instantiate(bala);
+    }
+
+    private void generatePickup(Vector2 collider, int posibility)
+    {
+        if (_pickUps == null) { return; }
+
+        int rand = Random.Range(0, 10);
+        int pickups = _pickUps.transform.childCount;
+
+        if (rand > posibility) { return; }
+
+        for (int i = 0; i < pickups;)
+        {
+            GameObject pickup = _pickUps.transform.GetChild(i).gameObject;
+            if (pickup.activeInHierarchy == true) { return; }
+            float positionX = collider.x;
+            float positionY = collider.y;
+
+            pickup.SetActive(true);
+            pickup.transform.position = new Vector3(positionX, positionY, 0);
+            break;
+        }
+    }
+
+    private void changeHealthOfPlayer(float amount)
+    {
+        uimanager.addLife(amount);
     }
 
     private void Awake()

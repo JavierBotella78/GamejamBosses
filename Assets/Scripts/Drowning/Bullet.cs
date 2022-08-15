@@ -49,6 +49,8 @@ public class Bullet : MonoBehaviour
     {
         if (collision == null && (collision.gameObject.layer != (int)Layers.Paredes || collision.gameObject.layer != (int)Layers.Enemigo)) { return; }
         if (collision.gameObject.layer == (int)Layers.Paredes) { ImDead?.Invoke(gameObject); return; }
+        Debug.Log("asdasdasdasdasdas");
+
         DamageEntity?.Invoke(collision.gameObject, gameObject, damage);
         disableBullet();
     }
