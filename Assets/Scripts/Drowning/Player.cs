@@ -12,7 +12,8 @@ public class Player : MonoBehaviour
     [SerializeField] private BulletScriptableObject _bullet;
 
 
-    public Action<Vector2, GameObject, float> OnSpaceKeyPressed;
+    public Action<Vector2, float, float> OnSpaceKeyPressed;
+    //public Action<Vector2, GameObject, float> OnSpaceKeyPressed;
 
     private void movePlayer()
     {
@@ -29,11 +30,22 @@ public class Player : MonoBehaviour
 
     private void checkShootButtonPressed()
     {
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetButton("Jump"))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             Vector2 position = new Vector2(transform.position.x, transform.position.y);
-            OnSpaceKeyPressed?.Invoke(position, _bullet.GetBullet, _bullet.GetSpeed);
+            OnSpaceKeyPressed?.Invoke(position, _bullet.GetSpeed, _bullet.GetDamage);
+            //OnSpaceKeyPressed?.Invoke(position, _bullet.GetBullet, _bullet.GetSpeed);
         }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        checkForCollision(collision);
+    }     
+    
+    private void checkForCollision(Collider2D collision)
+    {
+
     }
 
     private void Update()
