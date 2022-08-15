@@ -42,6 +42,7 @@ public class InputController : MonoBehaviour
         {
             jump = Input.GetKeyDown(KeyCode.W);
         }
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
