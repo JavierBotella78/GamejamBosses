@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _bullet: {fileID: 7754529975850486418, guid: cf8f95dd1ec0ec34182aec91d090d8d6, type: 3}
   _speed: -2
-  _damage: 0
+  _damage: -10

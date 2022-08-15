@@ -17,10 +17,10 @@ TagManager:
   - 
   - Walls
   - Bullets
-  - 
-  - 
-  - 
-  - 
+  - EnemyBullets
+  - PowerUps
+  - Player
+  - Enemies
   - 
   - 
   - 
