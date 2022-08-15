@@ -29,7 +29,7 @@ public class Player : MonoBehaviour
 
     private void checkShootButtonPressed()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetButton("Jump"))
         {
             Vector2 position = new Vector2(transform.position.x, transform.position.y);
             OnSpaceKeyPressed?.Invoke(position, _bullet.GetBullet, _bullet.GetSpeed);
