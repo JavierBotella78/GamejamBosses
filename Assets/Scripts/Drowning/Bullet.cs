@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,9 @@ public class Bullet : MonoBehaviour
 {
     [HideInInspector]public float speed;
     [SerializeField] private float moverX;
+
+    public Action<GameObject> ImDead;
+
 
     private void moveBullet()
     {
@@ -26,7 +30,6 @@ public class Bullet : MonoBehaviour
     private void checkforDeath(Collider2D collision)
     {
         if (collision == null || collision.gameObject.layer != (int)Layers.Paredes) { return; }
-        //ImDead?.Invoke();
-        gameObject.SetActive(false);
+        ImDead?.Invoke(gameObject);
     }
 }
