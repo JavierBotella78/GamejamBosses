@@ -24,7 +24,7 @@ public class CameraMovement : MonoBehaviour
         //camaraTransform.position = new Vector3(playerTransform.position.x, playerTransform.position.y, camaraTransform.position.z);
         lerpeado = Vector3.Lerp( camaraTransform.position, playerTransform.position, 0.3f*Time.fixedDeltaTime * Math.Abs(myplayerSpeed.velocity.y * 3) );
         lerpeado.z = camaraTransform.position.z;
+        lerpeado.x = camaraTransform.position.x;
         camaraTransform.position = lerpeado;
-        Debug.Log(myplayerSpeed.velocity.y);
     }
 }
