@@ -6,6 +6,10 @@ TagManager:
   tags:
   - Floor
   - Ground
+  - EnemyHurtbox
+  - PlayerHitbox
+  - EnemyHitbox
+  - PlayerHurtbox
   layers:
   - Default
   - TransparentFX
