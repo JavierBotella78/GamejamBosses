@@ -8,15 +8,20 @@ public class PlayerController : MonoBehaviour
     public float jumpForce;
     public float moveSpeed;
     public float jumpCooldown;
+    public float maxFallingSpeed;
 
     //Privado
     private float jumpTimeRemaining;
 
     //Private
     private Rigidbody2D myRigidbody;
+    private BoxCollider2D launchingHitbox;
+
+
     void Start()
     {
         myRigidbody = GetComponent<Rigidbody2D>();
+        launchingHitbox = GetComponent<BoxCollider2D>();
 
         jumpTimeRemaining = 0f;
     }
@@ -29,9 +34,10 @@ public class PlayerController : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Space) && jumpTimeRemaining <= 0f)
         {
             myRigidbody.velocity = new Vector2(myRigidbody.velocity.x, jumpForce);
-            //jumpTimeRemaining += 0.2f;
             StartCoroutine(StartJumpCooldown());
-            
+
+            launchingHitbox.enabled = true;
+            StartCoroutine(StartLaunchCooldown());
         }
 
         //Movimiento lateral
@@ -53,10 +59,8 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //Ponemos más gravedad
-
         //Limitamos la velocidad de caida
-        if (myRigidbody.velocity.y < -10) myRigidbody.velocity = new Vector2(myRigidbody.velocity.x, - 10);
+        if (myRigidbody.velocity.y < maxFallingSpeed) myRigidbody.velocity = new Vector2(myRigidbody.velocity.x, maxFallingSpeed);
     }
 
     //Empieza el cooldown y lo baja poco a poco hasta que es 0
@@ -65,9 +69,17 @@ public class PlayerController : MonoBehaviour
         for(jumpTimeRemaining = jumpCooldown; jumpTimeRemaining > 0f; jumpTimeRemaining -= 0.1f)
         {
             yield return new WaitForSeconds(0.1f);
-            Debug.Log(jumpTimeRemaining);
+            //Debug.Log(jumpTimeRemaining);
         }
         jumpTimeRemaining = 0f;
+    }
+
+    private IEnumerator StartLaunchCooldown()
+    {
+        Debug.Log("Empezado");
+        yield return new WaitForSeconds(.1f);
+        Debug.Log("Acabado");
+        launchingHitbox.enabled = false;
     }
 
 }
