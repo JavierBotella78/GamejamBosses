@@ -23,6 +23,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+
+        //TECLAS
         //Con el espacio se salta, reseteando la velocidad de caida
         if(Input.GetKeyDown(KeyCode.Space) && jumpTimeRemaining <= 0f)
         {
@@ -47,6 +49,14 @@ public class PlayerController : MonoBehaviour
         {
             myRigidbody.velocity = new Vector2(0f, myRigidbody.velocity.y);
         }
+    }
+
+    private void FixedUpdate()
+    {
+        //Ponemos más gravedad
+
+        //Limitamos la velocidad de caida
+        if (myRigidbody.velocity.y < -10) myRigidbody.velocity = new Vector2(myRigidbody.velocity.x, - 10);
     }
 
     //Empieza el cooldown y lo baja poco a poco hasta que es 0
