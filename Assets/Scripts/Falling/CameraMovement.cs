@@ -23,6 +23,7 @@ public class CameraMovement : MonoBehaviour
         //La posición x e y de la cámara va a seguir a la del jugador en todo momento, la z es la de la camara siempre
         //camaraTransform.position = new Vector3(playerTransform.position.x, playerTransform.position.y, camaraTransform.position.z);
         lerpeado = Vector3.Lerp( camaraTransform.position, playerTransform.position, 0.3f*Time.fixedDeltaTime * Math.Abs(myplayerSpeed.velocity.y * 3) );
+        //La x, z se mantienen igual al de la cámara base
         lerpeado.z = camaraTransform.position.z;
         lerpeado.x = camaraTransform.position.x;
         camaraTransform.position = lerpeado;

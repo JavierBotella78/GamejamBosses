@@ -6,7 +6,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     // VARIABLES
-    public float speed = 8;
+    public float speed = 5;
     private Vector2 mover;
 
     [SerializeField] private BulletScriptableObject _bullet;
