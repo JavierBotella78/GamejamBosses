@@ -99,8 +99,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _bullet: {fileID: 11400000, guid: 0291c979e76fa3e4e9f4abb5d3853f6a, type: 2}
-  maxhp: 50
+  maxhp: 15
   currenthp: 0
+  disparar: 1
 --- !u!50 &1502132108
 Rigidbody2D:
   serializedVersion: 4

@@ -12,6 +12,7 @@ public class Enemy : MonoBehaviour
     public Action<Vector2, int> onPickupGenerate;
     public float maxhp = 50f;
     public float currenthp;
+    public bool disparar = false;
 
     private void Awake()
     {
@@ -19,7 +20,8 @@ public class Enemy : MonoBehaviour
     }
     private void Start()
     {
-        InvokeRepeating(nameof(Disparar), 1f, 1f);
+        if(disparar)
+            InvokeRepeating(nameof(Disparar), 1f, 1f);
     }
 
     private void Disparar()
@@ -42,7 +44,6 @@ public class Enemy : MonoBehaviour
     public void changeLife(float amount)
     {
         currenthp += amount;
-        Debug.Log(amount);
         if (currenthp <= 0) {
             currenthp = 0;
             Vector2 position = new Vector2(transform.position.x, transform.position.y);

@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject _enemyBullets; //
     [SerializeField] private GameObject _enemies; //
     [SerializeField] private GameObject _pickUps; //
+    //[SerializeField] private CameraShake cameraShake; //
 
     [SerializeField] private UIManager uimanager; //
 
@@ -106,10 +107,13 @@ public class GameManager : MonoBehaviour
         if (_enemies == null) { return; }
         for (int i = 0; i < _enemies.transform.childCount; i++)
         {
-            Enemy enemy = _enemies.transform.GetChild(i).GetComponent<Enemy>();
-            enemy.OnAttack += generateEnemyBullet;
-            enemy.DamagePlayer += changeLifeOfEntity;
-            enemy.onPickupGenerate += generatePickup;
+            for (int j = 0; j < _enemies.transform.GetChild(i).childCount; j++)
+            {
+                Enemy enemy = _enemies.transform.GetChild(i).transform.GetChild(j).GetComponent<Enemy>();
+                enemy.OnAttack += generateEnemyBullet;
+                enemy.DamagePlayer += changeLifeOfEntity;
+                enemy.onPickupGenerate += generatePickup;
+            }
         }
     }
 
@@ -118,10 +122,13 @@ public class GameManager : MonoBehaviour
         if (_enemies == null) { return; }
         for (int i = 0; i < _enemies.transform.childCount; i++)
         {
-            Enemy enemy = _enemies.transform.GetChild(i).GetComponent<Enemy>();
-            enemy.OnAttack -= generateEnemyBullet;
-            enemy.DamagePlayer -= changeLifeOfEntity;
-            enemy.onPickupGenerate -= generatePickup;
+            for (int j = 0; j < _enemies.transform.GetChild(i).childCount; j++)
+            {
+                Enemy enemy = _enemies.transform.GetChild(i).transform.GetChild(j).GetComponent<Enemy>();
+                enemy.OnAttack -= generateEnemyBullet;
+                enemy.DamagePlayer -= changeLifeOfEntity;
+                enemy.onPickupGenerate -= generatePickup;
+            }
         }
     }
 
@@ -159,6 +166,7 @@ public class GameManager : MonoBehaviour
         entity.TryGetComponent(out enemy);
         if (playr == null  && enemy == null) { return; }
 
+        //StartCoroutine(cameraShake.Shake(0.5f, 0.01f));
         if(playr != null)
         {
             uimanager.addLife(amount); return;
