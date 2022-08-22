@@ -6,12 +6,20 @@ public class PlayerController : MonoBehaviour
 {
     //Modificable
     public float jumpForce;
+    public float dashForce;
     public float moveSpeed;
     public float jumpCooldown;
+    public float dashCooldown;
     public float maxFallingSpeed;
+    
+
+    public float pushForce;
 
     //Privado
     private float jumpTimeRemaining;
+    private float dashTimeRemaining;
+
+    private float rockAngularVelocity;
 
     //Private
     private Rigidbody2D myRigidbody;
@@ -21,15 +29,33 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         myRigidbody = GetComponent<Rigidbody2D>();
-        launchingHitbox = GetComponent<BoxCollider2D>();
+        launchingHitbox = transform.GetChild(0).GetComponent<BoxCollider2D>();
 
         jumpTimeRemaining = 0f;
+        rockAngularVelocity = 300f;
     }
 
     void Update()
     {
 
         //TECLAS
+        if(Input.GetKeyDown(KeyCode.Space) && dashTimeRemaining <= 0f && Input.GetAxisRaw("Horizontal") != 0)
+        {
+            //Dash izquierdo
+            if(Input.GetAxisRaw("Horizontal") < 0)
+            {
+                myRigidbody.velocity = new Vector2(-dashForce, myRigidbody.velocity.y);
+                StartCoroutine(StartDashCooldown());
+            }
+
+            //Dash derecho
+            if (Input.GetAxisRaw("Horizontal") > 0)
+            {
+                myRigidbody.velocity = new Vector2(dashForce, myRigidbody.velocity.y);
+                StartCoroutine(StartDashCooldown());
+            }
+        }
+        else
         //Con el espacio se salta, reseteando la velocidad de caida
         if(Input.GetKeyDown(KeyCode.Space) && jumpTimeRemaining <= 0f)
         {
@@ -43,24 +69,36 @@ public class PlayerController : MonoBehaviour
         //Movimiento lateral
         if (Input.GetAxis("Horizontal") < 0)
         {
-            myRigidbody.velocity = new Vector2(-moveSpeed, myRigidbody.velocity.y);
+            myRigidbody.velocity = new Vector2(myRigidbody.velocity.x - moveSpeed*Time.deltaTime, myRigidbody.velocity.y);
         }
 
         if (Input.GetAxis("Horizontal") > 0)
         {
-            myRigidbody.velocity = new Vector2(moveSpeed, myRigidbody.velocity.y);
+            myRigidbody.velocity = new Vector2(myRigidbody.velocity.x + moveSpeed*Time.deltaTime, myRigidbody.velocity.y);
         }
 
-        if (Input.GetAxisRaw("Horizontal") == 0)
-        {
-            myRigidbody.velocity = new Vector2(0f, myRigidbody.velocity.y);
-        }
+        
     }
 
     private void FixedUpdate()
     {
         //Limitamos la velocidad de caida
         if (myRigidbody.velocity.y < maxFallingSpeed) myRigidbody.velocity = new Vector2(myRigidbody.velocity.x, maxFallingSpeed);
+    }
+
+    //Si impulsa una roca, le mete velocidad
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        //Solo si el objeto es launchable
+        if (collision.gameObject.layer == 14 )
+        {
+            Debug.Log("Colisionado");
+            Vector2 rockVelocity = collision.gameObject.GetComponent<Rigidbody2D>().velocity;
+            rockVelocity.y = pushForce;
+            collision.gameObject.GetComponent<Rigidbody2D>().velocity = rockVelocity;
+
+            collision.gameObject.GetComponent<Rigidbody2D>().angularVelocity = rockAngularVelocity;
+        }
     }
 
     //Empieza el cooldown y lo baja poco a poco hasta que es 0
@@ -76,10 +114,17 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator StartLaunchCooldown()
     {
-        Debug.Log("Empezado");
         yield return new WaitForSeconds(.1f);
-        Debug.Log("Acabado");
         launchingHitbox.enabled = false;
     }
 
+    private IEnumerator StartDashCooldown()
+    {
+        for (dashTimeRemaining = dashCooldown; dashTimeRemaining > 0f; dashTimeRemaining -= 0.1f)
+        {
+            yield return new WaitForSeconds(0.1f);
+            Debug.Log(dashTimeRemaining);
+        }
+        dashTimeRemaining = 0f;
+    }
 }
