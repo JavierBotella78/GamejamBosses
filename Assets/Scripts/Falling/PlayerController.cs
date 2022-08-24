@@ -6,19 +6,35 @@ public class PlayerController : MonoBehaviour
 {
     //Modificable
     public float jumpForce;
+
     public float dashForce;
+    public float dashFramesActive;
+
     public float moveSpeed;
+
     public float jumpCooldown;
     public float dashCooldown;
+
     public float maxFallingSpeed;
     public float mortalSpeed;
     
-
     public float pushForce;
+
+    public float smoothMaxFrames;
 
     //Privado
     private float jumpTimeRemaining;
     private float dashTimeRemaining;
+
+    private float dashActualFrameActive;
+    private bool justMoved;
+    private float smoothFrames;
+
+
+
+
+
+
 
     private float rockAngularVelocity;
 
@@ -36,6 +52,10 @@ public class PlayerController : MonoBehaviour
 
         jumpTimeRemaining = 0f;
         rockAngularVelocity = 300f;
+        dashActualFrameActive = 0f;
+
+        justMoved = false;
+        smoothFrames = 0;
     }
 
     void Update()
@@ -49,6 +69,7 @@ public class PlayerController : MonoBehaviour
             {
                 myRigidbody.velocity = new Vector2(-dashForce, myRigidbody.velocity.y);
                 StartCoroutine(StartDashCooldown());
+                StartCoroutine(DashAction(-dashForce));
             }
 
             //Dash derecho
@@ -56,6 +77,7 @@ public class PlayerController : MonoBehaviour
             {
                 myRigidbody.velocity = new Vector2(dashForce, myRigidbody.velocity.y);
                 StartCoroutine(StartDashCooldown());
+                StartCoroutine(DashAction(dashForce));
             }
         }
         else
@@ -70,17 +92,29 @@ public class PlayerController : MonoBehaviour
         }
 
         //Movimiento lateral
-        if (Input.GetAxis("Horizontal") < 0)
+        if (Input.GetAxisRaw("Horizontal") < 0)
         {
             myRigidbody.velocity = new Vector2(myRigidbody.velocity.x - moveSpeed*Time.deltaTime, myRigidbody.velocity.y);
+            justMoved = true;
         }
 
-        if (Input.GetAxis("Horizontal") > 0)
+        if (Input.GetAxisRaw("Horizontal") > 0)
         {
             myRigidbody.velocity = new Vector2(myRigidbody.velocity.x + moveSpeed*Time.deltaTime, myRigidbody.velocity.y);
+            justMoved = true;
         }
 
-        
+        //No se hace por ahora
+        //Cuando no estoy tocando el movimiento, me acabo de mover y no estoy dasheando, reduzco mo velocidad lateral a la mitad, así no se desliza por hierlo
+        if (Input.GetAxisRaw("Horizontal") == 0 && justMoved && dashActualFrameActive == 0f)
+        {
+            Debug.Log("Parado");
+            //myRigidbody.velocity = new Vector2(myRigidbody.velocity.x / 2, myRigidbody.velocity.y);
+            StartCoroutine(SmoothMovement());
+            justMoved = false;
+        }
+
+
     }
 
     private void FixedUpdate()
@@ -163,5 +197,38 @@ public class PlayerController : MonoBehaviour
             //Debug.Log(dashTimeRemaining);
         }
         dashTimeRemaining = 0f;
+    }
+
+    private IEnumerator DashAction(float dashf)
+    {
+        //Le quitamos la gravedad al jugador lo movemos poco a poco hacia un lado
+        float beforeGravityScale = myRigidbody.gravityScale;
+        myRigidbody.gravityScale = 0;
+        myRigidbody.velocity = new Vector2(dashf, myRigidbody.velocity.y);
+
+        //Contamos los frames indicados en DashFramesActive
+        for (dashActualFrameActive = dashFramesActive; dashActualFrameActive > 0f; dashActualFrameActive -= 1)
+        {
+            //yield return new WaitForSeconds(Time.deltaTime);
+            yield return new WaitForFixedUpdate();
+            //Debug.Log(dashActualFrameActive);
+        }
+        dashActualFrameActive = 0f;
+
+        //Acabamos dejando al jugador con gravedad y controles
+        myRigidbody.gravityScale = beforeGravityScale;
+    }
+
+    private IEnumerator SmoothMovement()
+    {
+        for (smoothFrames = smoothMaxFrames; smoothFrames > 0f; smoothFrames -= 1)
+        {
+            yield return new WaitForFixedUpdate();
+            Debug.Log(smoothFrames);
+            if(dashActualFrameActive == 0) myRigidbody.velocity = new Vector2(myRigidbody.velocity.x / 1.075f, myRigidbody.velocity.y);
+
+
+        }
+        smoothFrames = 0f;
     }
 }

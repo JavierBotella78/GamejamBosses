@@ -1342,9 +1342,9 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0.5
-  m_AngularDrag: 0.05
-  m_GravityScale: 3
+  m_LinearDrag: 0
+  m_AngularDrag: 0
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -1444,14 +1444,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d923cd7b737e2841928060052f2feb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpForce: 6
-  dashForce: 5
-  moveSpeed: 6
+  jumpForce: 8
+  dashForce: 6
+  dashFramesActive: 15
+  moveSpeed: 8
   jumpCooldown: 1
-  dashCooldown: 3
-  maxFallingSpeed: -22
-  mortalSpeed: -17
+  dashCooldown: 1
+  maxFallingSpeed: -20
+  mortalSpeed: -19
   pushForce: -5
+  smoothMaxFrames: 10
 --- !u!1 &1854632535
 GameObject:
   m_ObjectHideFlags: 0
